@@ -9,6 +9,7 @@ public class JClient {
 		JFrame f = new ConnectFrame();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setVisible(true);
+		//f.setVisible(false);
 	
 	}
 	

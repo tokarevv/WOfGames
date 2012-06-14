@@ -3,19 +3,14 @@ package Client;
 import javax.swing.JFrame;
 
 @SuppressWarnings("serial")
-public class ListFrame extends JFrame {
+public class aGameFrame extends JFrame {
 	
-	private Players players = Players.getInstance();
-	private Games games = Games.getInstance();
-	
-	public ListFrame(){
+	public aGameFrame(){
 		
 		setSize(400, 300);
 		setLocation(50, 50);
 		setTitle("List frame");
 		
 	}
-	
-	
 
 }

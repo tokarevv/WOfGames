@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.UnknownHostException;
 
 import javax.swing.JButton;
@@ -17,17 +18,21 @@ import javax.swing.JTextField;
 import Controller.Connector;
 
 @SuppressWarnings("serial")
-public class ConnectFrame extends JFrame {
+public class ConnectFrame extends JFrame implements iResponseHandler{
+	
+	public static final String DEFAULT_LOGIN = "empty";
+	public static final String DEFAULT_ADDRESS = "91.193.234.248";
+	public static final String DEFAULT_PORT = "8189";
 	
 	private JPanel connectPanel;
-	private JTextField server = new JTextField();
-	private JTextField port = new JTextField();
-	private JTextField login = new JTextField();
+	private JTextField server = new JTextField(DEFAULT_ADDRESS);
+	private JTextField port = new JTextField(DEFAULT_PORT);
+	private JTextField login = new JTextField(DEFAULT_LOGIN);
 	private Connector conn = new Connector();
 	
 	public ConnectFrame(){
 		
-		setSize(400, 150);
+		setSize(400, 120);
 		setTitle("Connect");
 		setLayout(new BorderLayout());
 		
@@ -48,8 +53,10 @@ public class ConnectFrame extends JFrame {
 	private void addConnectPanel() {
 		connectPanel = new JPanel(new GridLayout(2, 0));
 		//add field for writing in the connection string
-		connectPanel.add(new JLabel("Connection address and port (for example: 127.0.0.1:8989):"));
+		connectPanel.add(new JLabel("Connection address:"));
 		connectPanel.add(server);
+		connectPanel.add(new JLabel("Connection port:"));
+		connectPanel.add(port);
 		add(connectPanel, BorderLayout.CENTER);
 	}
 
@@ -65,35 +72,50 @@ public class ConnectFrame extends JFrame {
 		return res;
 	}
 
+	private void connect() throws NumberFormatException, UnknownHostException, IOException {
+		conn = new Connector();
+		conn.connect(server.getText(), Integer.parseInt(port.getText()));
+		
+		conn.send("ConnectMe:"+login.getText(), this);
+		
+		proceedResponse(conn.getResponse());
+	}
+
 	class ConnectListener implements ActionListener {
 
 		@Override
-		public void actionPerformed(ActionEvent e) {
-			
-			JFrame f = new ListFrame();//GameFrame.get;
-			f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			connect();
-			setInvisible();
-			f.setVisible(true);
-			
-		}
+		public void actionPerformed(ActionEvent evt) {
 
-		private void connect() {
-			conn = new Connector(server.getText());
+			JFrame f = new ListFrame();// GameFrame.get;
+			f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			try {
-				conn.connect();
-				conn.send("ConnectMe:"+login.getText());
+				connect();
+				setInvisible();
+				f.setVisible(true);
+			} catch (ConnectException e) {
+				System.out.println("Couldn't establish a connection: Connection refused!");
 			} catch (UnknownHostException e) {
 				System.out.println("Couldn't establish a connection: Unknown Host!");
-				e.printStackTrace();
+				//e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 				
-			System.out.println("Couldn't establish a connection");
+			//System.out.println("Couldn't establish a connection");
+			
 			
 		}
 
+
+	}
+
+	@Override
+	public void proceedResponse(String response) {
+		
+		ResponseHandler rh = new ResponseHandler(response);
+				
+		String command = rh.getCommand();
+		
 	}	
 
 }

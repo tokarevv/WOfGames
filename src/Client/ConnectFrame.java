@@ -10,8 +10,10 @@ import java.net.ConnectException;
 import java.net.UnknownHostException;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -21,14 +23,14 @@ import Controller.Connector;
 public class ConnectFrame extends JFrame implements iResponseHandler{
 	
 	public static final String DEFAULT_LOGIN = "empty";
-	public static final String DEFAULT_ADDRESS = "91.193.234.248";
+	public static final String DEFAULT_ADDRESS = "192.168.0.113";//"213.227.229.148";//
 	public static final String DEFAULT_PORT = "8189";
 	
 	private JPanel connectPanel;
 	private JTextField server = new JTextField(DEFAULT_ADDRESS);
 	private JTextField port = new JTextField(DEFAULT_PORT);
 	private JTextField login = new JTextField(DEFAULT_LOGIN);
-	private Connector conn = new Connector();
+	private Connector conn = Connector.getInstance();
 	
 	public ConnectFrame(){
 		
@@ -73,12 +75,14 @@ public class ConnectFrame extends JFrame implements iResponseHandler{
 	}
 
 	private void connect() throws NumberFormatException, UnknownHostException, IOException {
-		conn = new Connector();
+		conn = Connector.getInstance();
 		conn.connect(server.getText(), Integer.parseInt(port.getText()));
 		
-		conn.send("ConnectMe:"+login.getText(), this);
+		conn.send("ConnectMe:"+login.getText());
+		//conn.send("SuggestGame:X0,"+login.getText());
 		
 		proceedResponse(conn.getResponse());
+		//proceedResponse("playerList:Vasya, Kuzzya");
 	}
 
 	class ConnectListener implements ActionListener {
@@ -86,12 +90,8 @@ public class ConnectFrame extends JFrame implements iResponseHandler{
 		@Override
 		public void actionPerformed(ActionEvent evt) {
 
-			JFrame f = new ListFrame();// GameFrame.get;
-			f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			try {
 				connect();
-				setInvisible();
-				f.setVisible(true);
 			} catch (ConnectException e) {
 				System.out.println("Couldn't establish a connection: Connection refused!");
 			} catch (UnknownHostException e) {
@@ -101,8 +101,6 @@ public class ConnectFrame extends JFrame implements iResponseHandler{
 				e.printStackTrace();
 			}
 				
-			//System.out.println("Couldn't establish a connection");
-			
 			
 		}
 
@@ -115,6 +113,20 @@ public class ConnectFrame extends JFrame implements iResponseHandler{
 		ResponseHandler rh = new ResponseHandler(response);
 				
 		String command = rh.getCommand();
+		System.out.println(command);
+		System.out.println(response);
+		
+		if (command.trim().toLowerCase().equals("badname")){
+			JOptionPane.showMessageDialog(this, "This login is not unique. Try another one.");
+		}
+		else{
+			ListFrame f = new ListFrame();// GameFrame.get;
+			f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			setInvisible();
+			f.setVisible(true);
+			f.setPlayerList(rh.getParams());
+			
+		}
 		
 	}	
 

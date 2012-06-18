@@ -1,13 +1,18 @@
 package Client;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class Games {
+import javax.swing.table.AbstractTableModel;
 
-	private ArrayList<String> games = new ArrayList<String>();
+public class Games extends AbstractTableModel{
+
+	private List<String> games = new ArrayList<String>();
 	private static Games instance = null;
 	
-	private Games(){}
+	private Games(){
+		games.add("X0");
+	}
 	
 	public static Games getInstance(){
 		
@@ -19,12 +24,46 @@ public class Games {
 	}
 	
 	
-	public ArrayList<String> getGames() {
+	public List<String> getGames() {
 		return games;
 	}
 
-	public void setGames(ArrayList<String> players) {
+	public void setGames(List<String> players) {
 		this.games = players;
+	}
+
+	public String get(int index) {
+		return games.get(index);
+	};
+
+	@Override
+	public int getColumnCount() {
+		return 1;
+	}
+
+	@Override
+	public int getRowCount() {
+		return games.size();
+	}
+
+	public String getColumnName(int column) 
+	{
+        return "games";
+    }  
+
+	@Override
+	public Object getValueAt(int row, int col) {
+		return games.get(row);
+	}
+
+	@Override
+    public Class<?> getColumnClass(int column) {                                                               
+        return String.class;
+    }  	
+
+	@Override
+	public boolean isCellEditable(int arg0, int arg1) {
+		return false;
 	}
 
 }

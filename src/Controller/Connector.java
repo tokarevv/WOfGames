@@ -7,9 +7,6 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import Client.ConnectFrame;
-import Client.iResponseHandler;
-
 public class Connector {
 	
 	//private String address;
@@ -17,10 +14,19 @@ public class Connector {
 	private Socket fromserver = null;
 	private PrintWriter out = null;
 	private BufferedReader in = null;
+	private static Connector instance = null;
 	
 
-	public Connector() {}
+	private Connector() {}
 	
+	public static Connector getInstance(){
+		
+		if (instance == null){
+			instance = new Connector();
+		}
+		return instance;
+		
+	}	
 	public void connect(String address, int port) throws UnknownHostException, IOException{
 
 		fromserver = new Socket(address, port);// "91.193.234.248", 8189
@@ -29,10 +35,11 @@ public class Connector {
 		
 	}
 
-	public void send(String string, iResponseHandler frame) {
+	public void send(String string) {
 		out.println(string);
 		out.flush();
-		out.println("end command");		
+		out.println("endCommand");		
+		System.out.println("Command sent");
 	}
 
 	public String getResponse() throws IOException {
@@ -57,6 +64,10 @@ public class Connector {
 		//System.out.println(response);
 		
 		
+	}
+
+	public boolean isClosed() {
+		return fromserver.isClosed();
 	}
 
 }

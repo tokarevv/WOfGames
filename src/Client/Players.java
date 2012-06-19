@@ -28,6 +28,7 @@ public class Players extends AbstractTableModel {
 
 	public void setPlayers(List<String> players) {
 		this.players = players;
+		fireTableDataChanged();
 	}
 
 	public String get(int index) {

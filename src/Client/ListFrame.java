@@ -1,11 +1,9 @@
 package Client;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.swing.JButton;
@@ -23,15 +21,27 @@ public class ListFrame extends JFrame  implements iResponseHandler{
 	
 	private Players players = Players.getInstance();
 	private Games games = Games.getInstance();
+	
 	private	JTable playersTable = null;
 	private JScrollPane jsp = null;
 	private	JTable gamesTable = null;
 	private JScrollPane gjsp = null;
-	private JPanel listsPanel = new JPanel(new GridLayout(1,2));
-	private Connector conn = Connector.getInstance();
-
 	
-	public ListFrame(){
+	private JPanel listsPanel = new JPanel(new GridLayout(1,2));
+	//private Connector conn = Connector.getInstance();
+	private static ListFrame instance = null;
+	//private Map<aGameAPI> games
+	
+	public static ListFrame getInstance(){
+		
+		if (instance == null){
+			instance = new ListFrame();
+		}
+		return instance;
+		
+	}
+	
+	private ListFrame(){
 		
 		setSize(400, 300);
 		setLocation(50, 50);
@@ -45,9 +55,14 @@ public class ListFrame extends JFrame  implements iResponseHandler{
 		addGamesTable();
 		
 		addButtons();
+		initCommandFactory();
 		
 	}
 	
+	private void initCommandFactory() {
+		//CommandFactory.getInstanse();		
+	}
+
 	private void addButtons() {
 		JButton suggestGameButton = new JButton("Suggest a geme");
 		suggestGameButton.addActionListener(new SuggestGameListener());
@@ -83,33 +98,13 @@ public class ListFrame extends JFrame  implements iResponseHandler{
 			return;
 		}
 		
-		conn.send("SuggestGame:"+games.get(gamesTable.getSelectedRow())+","+players.get(playersTable.getSelectedRow()));
+		Connector.getInstance().send("SuggestGame:"+games.get(gamesTable.getSelectedRow())+","+players.get(playersTable.getSelectedRow()));
 		
 	}
 	
 	@Override
 	public void proceedResponse(String response) {
-		ResponseHandler rh = new ResponseHandler(response);
-		
-		String command = rh.getCommand();
-		System.out.println(command);
-		System.out.println(response);
-		
-		if (command.trim().toLowerCase().equals("refuseGame")){
-			JOptionPane.showMessageDialog(this, "Player has refused your suggestion.");
-		}
-		else{
-			String[] params = rh.getParams();
-			if (params.length != 3){
-				//smth is wrong
-			}
-			//aGameAPI game = GameFactory.getGame(params[0]);
-			//f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			//setVisible(false);
-			//f.setVisible(true);
-			//f.setPlayerList(rh.getParams());
-			
-		}
+
 	}
 	private boolean isGameAndPlayerSelected() {
 		boolean res = true;
@@ -128,7 +123,7 @@ public class ListFrame extends JFrame  implements iResponseHandler{
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			if (conn.isClosed()){
+			if (Connector.getInstance().isClosed()){
 				showMessage("For some reason connection is lost. Try to reconnect.");
 			}
 			else{

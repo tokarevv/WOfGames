@@ -10,7 +10,7 @@ public class ResponseHandler {
 	}
 
 	public String getCommand() {
-		return responseParts[0];
+		return responseParts[0].trim().toLowerCase();
 	}
 	
 	public String[] getParams() {
@@ -20,6 +20,9 @@ public class ResponseHandler {
 		}
 		else {
 			res = new String[0];
+		}
+		for (String s: res){
+			System.out.println(s);
 		}
 		return res;
 	}

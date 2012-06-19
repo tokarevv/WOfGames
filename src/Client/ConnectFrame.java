@@ -20,7 +20,7 @@ import javax.swing.JTextField;
 import Controller.Connector;
 
 @SuppressWarnings("serial")
-public class ConnectFrame extends JFrame implements iResponseHandler{
+public class ConnectFrame extends JFrame {
 	
 	public static final String DEFAULT_LOGIN = "empty";
 	public static final String DEFAULT_ADDRESS = "192.168.0.113";//"213.227.229.148";//
@@ -31,8 +31,19 @@ public class ConnectFrame extends JFrame implements iResponseHandler{
 	private JTextField port = new JTextField(DEFAULT_PORT);
 	private JTextField login = new JTextField(DEFAULT_LOGIN);
 	private Connector conn = Connector.getInstance();
+
+	private static ConnectFrame instance = null;
 	
-	public ConnectFrame(){
+	public static ConnectFrame getInstance(){
+		
+		if (instance == null){
+			instance = new ConnectFrame();
+		}
+		return instance;
+		
+	}
+	
+	private ConnectFrame(){
 		
 		setSize(400, 120);
 		setTitle("Connect");
@@ -81,7 +92,7 @@ public class ConnectFrame extends JFrame implements iResponseHandler{
 		conn.send("ConnectMe:"+login.getText());
 		//conn.send("SuggestGame:X0,"+login.getText());
 		
-		proceedResponse(conn.getResponse());
+		//proceedResponse(conn.getResponse());
 		//proceedResponse("playerList:Vasya, Kuzzya");
 	}
 
@@ -101,33 +112,6 @@ public class ConnectFrame extends JFrame implements iResponseHandler{
 				e.printStackTrace();
 			}
 				
-			
 		}
-
-
 	}
-
-	@Override
-	public void proceedResponse(String response) {
-		
-		ResponseHandler rh = new ResponseHandler(response);
-				
-		String command = rh.getCommand();
-		System.out.println(command);
-		System.out.println(response);
-		
-		if (command.trim().toLowerCase().equals("badname")){
-			JOptionPane.showMessageDialog(this, "This login is not unique. Try another one.");
-		}
-		else{
-			ListFrame f = new ListFrame();// GameFrame.get;
-			f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			setInvisible();
-			f.setVisible(true);
-			f.setPlayerList(rh.getParams());
-			
-		}
-		
-	}	
-
 }

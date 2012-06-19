@@ -7,10 +7,10 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import Client.IncomeListener;
+
 public class Connector {
 	
-	//private String address;
-	//private int port;
 	private Socket fromserver = null;
 	private PrintWriter out = null;
 	private BufferedReader in = null;
@@ -33,13 +33,21 @@ public class Connector {
 		out = new PrintWriter(fromserver.getOutputStream(), true);
 	    in  = new BufferedReader(new InputStreamReader(fromserver.getInputStream()));
 		
+		initIncomeListener();
+		
+	}
+	
+	private static void initIncomeListener() {
+		IncomeListener incListener =  IncomeListener.getInstance();
+		Thread t = new Thread(incListener);
+		t.start();
 	}
 
 	public void send(String string) {
 		out.println(string);
 		out.flush();
 		out.println("endCommand");		
-		System.out.println("Command sent");
+		System.out.println("Command sent - "+string);
 	}
 
 	public String getResponse() throws IOException {
@@ -60,8 +68,6 @@ public class Connector {
 			response += input;
 		}
 		return response;
-		//frame.proceedResponse(response);
-		//System.out.println(response);
 		
 		
 	}

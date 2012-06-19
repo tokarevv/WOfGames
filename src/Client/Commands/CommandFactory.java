@@ -3,7 +3,6 @@ package Client.Commands;
 import java.util.HashMap;
 
 import Client.ResponseHandler;
-import Controller.aCommand;
 
 public class CommandFactory {
 	

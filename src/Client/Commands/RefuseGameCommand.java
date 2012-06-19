@@ -4,7 +4,6 @@ import javax.swing.JOptionPane;
 
 import Client.ListFrame;
 import Client.ResponseHandler;
-import Controller.aCommand;
 
 public class RefuseGameCommand extends aCommand {
 

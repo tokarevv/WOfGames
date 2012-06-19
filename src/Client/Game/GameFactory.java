@@ -1,4 +1,4 @@
-package Client;
+package Client.Game;
 
 import Client.X0.X0GameAPI;
 

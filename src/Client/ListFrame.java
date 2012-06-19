@@ -17,7 +17,7 @@ import javax.swing.JTable;
 import Controller.Connector;
 
 @SuppressWarnings("serial")
-public class ListFrame extends JFrame  implements iResponseHandler{
+public class ListFrame extends JFrame {
 	
 	private Players players = Players.getInstance();
 	private Games games = Games.getInstance();
@@ -102,10 +102,7 @@ public class ListFrame extends JFrame  implements iResponseHandler{
 		
 	}
 	
-	@Override
-	public void proceedResponse(String response) {
 
-	}
 	private boolean isGameAndPlayerSelected() {
 		boolean res = true;
 		if (gamesTable.getSelectedRow() == -1){

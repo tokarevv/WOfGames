@@ -1,4 +1,4 @@
-package Controller;
+package Client.Commands;
 
 import Client.ResponseHandler;
 

@@ -1,4 +1,4 @@
-package Client;
+package Client.Game;
 
 public class aGameAPI {
 

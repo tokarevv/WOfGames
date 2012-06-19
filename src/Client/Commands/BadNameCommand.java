@@ -4,7 +4,6 @@ import javax.swing.JOptionPane;
 
 import Client.ConnectFrame;
 import Client.ResponseHandler;
-import Controller.aCommand;
 
 public class BadNameCommand extends aCommand {
 

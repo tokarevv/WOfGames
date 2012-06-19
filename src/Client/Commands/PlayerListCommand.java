@@ -5,7 +5,6 @@ import javax.swing.JFrame;
 import Client.ConnectFrame;
 import Client.ListFrame;
 import Client.ResponseHandler;
-import Controller.aCommand;
 
 public class PlayerListCommand extends aCommand {
 

@@ -7,7 +7,7 @@ import Client.Commands.CommandFactory;
 import Client.Commands.WrongCommandTypeException;
 import Controller.Connector;
 
-public class IncomeListener  implements iResponseHandler, Runnable {
+public class IncomeListener  implements Runnable {
 
 	//private List<String> players = new ArrayList<String>();
 	private static IncomeListener instance = null;
@@ -36,7 +36,7 @@ public class IncomeListener  implements iResponseHandler, Runnable {
 		}
 	}
 
-	@Override
+	
 	public void proceedResponse(String response) {
 		
 		ResponseHandler rh = new ResponseHandler(response);
